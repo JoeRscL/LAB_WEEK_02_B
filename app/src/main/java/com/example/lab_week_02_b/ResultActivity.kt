@@ -1,14 +1,21 @@
 package com.example.lab_week_02_b
 
+import android.app.Activity
 import android.graphics.Color
 import android.os.Bundle
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 
 class ResultActivity : AppCompatActivity() {
+    companion object {
+        private const val COLOR_KEY = "COLOR_KEY"
+        private const val ERROR_KEY = "ERROR_KEY"
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -20,16 +27,21 @@ class ResultActivity : AppCompatActivity() {
             insets
         }
 
-        val colorCode = intent.getStringExtra("COLOR_KEY") ?: "FFFFFF"
+        val colorCode = intent.getStringExtra(COLOR_KEY)
 
-        val background = findViewById<androidx.constraintlayout.widget.ConstraintLayout>(R.id.background_screen)
+        val background = findViewById<ConstraintLayout>(R.id.background_screen)
         val message = findViewById<TextView>(R.id.color_code_result_message)
 
-        try {
-            background.setBackgroundColor(Color.parseColor("#$colorCode"))
-            message.text = "Color code #$colorCode is applied!"
-        } catch (e: IllegalArgumentException) {
-            message.text = "Invalid color code: #$colorCode"
+        if (colorCode != null) {
+            try {
+                background.setBackgroundColor(Color.parseColor("#$colorCode"))
+                message.text = getString(R.string.color_code_result_message, colorCode.uppercase())
+            } catch (e: IllegalArgumentException) {
+                val errorIntent = intent
+                errorIntent.putExtra(ERROR_KEY, true)
+                setResult(Activity.RESULT_OK, errorIntent)
+                finish()
+            }
         }
     }
 }
