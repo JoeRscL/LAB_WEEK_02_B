@@ -3,6 +3,7 @@ package com.example.lab_week_02_b
 import android.app.Activity
 import android.graphics.Color
 import android.os.Bundle
+import android.widget.Button
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -28,7 +29,6 @@ class ResultActivity : AppCompatActivity() {
         }
 
         val colorCode = intent.getStringExtra(COLOR_KEY)
-
         val background = findViewById<ConstraintLayout>(R.id.background_screen)
         val message = findViewById<TextView>(R.id.color_code_result_message)
 
@@ -42,6 +42,11 @@ class ResultActivity : AppCompatActivity() {
                 setResult(Activity.RESULT_OK, errorIntent)
                 finish()
             }
+        }
+
+        val btnBack = findViewById<Button>(R.id.btn_back)
+        btnBack.setOnClickListener {
+            finish()
         }
     }
 }
